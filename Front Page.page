@@ -30,7 +30,7 @@ avplayer 是一个开源的 p2p播放器框架和用这个框架实现的简单�
 
 ## avbot
 avbot 原名 qqbot ， 是伟大的 QQ/IRC/XMPP 三协议通吃的互联机器人。将分裂的 QQ/IRC/XMPP 世界融合到了一起。
-[avbot详细情况](Avbot)
+[avbot详细情况](avbot)
 
 ## avhttp
 avhttp 是一个HTTP下载库，能并发下载。使用 asio 作为异步事件框架。
