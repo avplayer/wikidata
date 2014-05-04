@@ -2,16 +2,58 @@
 format: Markdown
 ...
 
-# Welcome to Gitit!
 
-This is the front page of your new gitit wiki.  You can edit this
-page by clicking on the "edit" tab at the top of the screen.
-For instructions on how to make a link to another wiki page, see [the
-Help page](Help#wiki-links). To create a new wiki page, just create a
-link to it and follow the link.
+[http://avplayer.org avplayer 社区]是致力于推广 C++ 技术的社区, 享有"国内技术第一的开源社区"称号。
 
-Help is always available through the "Help" link in the sidebar.
-More details on installing and configurating gitit are available
-in the [Gitit User’s Guide]().
 
-[avbot]()
+社区由志愿者运作，目前的管理者是 jack/microcai/invxp, webmaster hyq。分别来自四个不同的地外文明，来到中国献身伟大的开源事业。 此外还有来自中国的数十w成员在贡献代码。
+
+== 社区规章 ==
+这里是一个自由开放编辑环境, 欢迎任何人在这里留下一些有用的东西!
+
+
+社区用户条款:
+
+# 本社区用户享有言论自由权利；并适度拥有修改、删除自己发表的文章的权利。
+# 本社区用户享有在社区各公开栏目发表言论的权利，若栏目中有特殊规定，或受到社区处罚而关闭发言权限则例外。
+# 未经社区管理员同意，禁止在本社区内发布任何形式的广告。
+# 不要长时间潜水。如果来社区不说话，只是为了看大家在聊什么，本社区提供了公开的日志记录，可以[http://avlog.avplayer.org/ 在此] 查阅。
+
+== [[社区论坛]] ==
+
+为方便大家讨论, 本设计建立了论坛. 请访问 [http://avboost.com http://avboost.com]. 强调隐私的人可以使用 https 地址访问 [https://avboost.com https://avboost.com]
+
+== [[社区项目]] ==
+
+=== avplayer ===
+avplayer 是一个开源的 p2p播放器框架和用这个框架实现的简单播放器。
+
+=== avbot ===
+avbot 原名 qqbot ， 是伟大的 QQ/IRC/XMPP 三协议通吃的互联机器人。将分裂的 QQ/IRC/XMPP 世界融合到了一起。
+*[[Avbot|avbot详细情况]]
+
+=== avhttp ===
+avhttp 是一个HTTP下载库，能并发下载。使用 asio 作为异步事件框架。
+*[[avhttp 介绍]]
+
+=== avproxy ===
+avproxy 是一个　helper 类库，用于异步执行DNS解析和TCP连接，以及执行透过代理进行连接。将DNS解析，连接，进行代理握手等一系列复杂的操作，简单到使用　avproxy::async_proxyconnect 一条语句即可完成。而且这个过程是异步执行的。
+(注意： 该项目已合并进(https://github.com/avplayer/avboost/tree/master/include/boost/avproxy))
+
+=== avsocks ===
+[https://github.com/avplayer/avsocks avsocks] 是科学上网软件，将中国不合理的局域网变成真正的因特网的软件。
+
+=== avmobile ===
+avmobile(imobiledevice)是基于libimobiledevice跨平台基于苹果各种移动设备的开源库.
+
+
+请查阅[//meta.wikimedia.org/wiki/Help:Contents 用户指南]以获取使用本wiki软件的信息！
+
+== 社区讲座 ==
+avplayer 社区不定期举办一些编程知识讲座. 详情请参考 [[社区讲座]]
+
+== 入门 ==
+* [//www.mediawiki.org/wiki/Manual:Configuration_settings MediaWiki配置设置列表]
+* [//www.mediawiki.org/wiki/Manual:FAQ/zh-hans MediaWiki常见问题]
+* [https://lists.wikimedia.org/mailman/listinfo/mediawiki-announce MediaWiki发布邮件列表]
+* [//www.mediawiki.org/wiki/Localisation#Translation_resources 本地化MediaWiki到您的语言]
