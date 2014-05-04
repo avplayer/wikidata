@@ -1,0 +1,202 @@
+---
+format: markdown
+title: avhttp介绍
+...
+# 简介
+avhttp是一个基于Boost.Asio实现的HTTP客户端开发工具库, 它支持HTTP(1.0/1.1)、HTTPS, 断点续传, 多线程并发下载, 异步, HTTP/SOCKS4/SOCKS5代理支持等特性, 开发者可以轻松的基于这个库开发其他相关应用.
+
+# 历史
+
+问题起源于 microcai　和　jack 的一次谈话。他们注意到了　HTTP 多线程下载模式，其实本质上不过是向服务器发起了多个TCP连接。使用一个线程一样能完成这样的工作——只要他们使用的是异步方式进行的。boost.asio 是一个非常优秀的异步网络库，要是能基于 asio 开发，就能实现单线程并发下载。得益于asio的良好架构，如果单线程性能不足的时候，只需要简单的开启多个线程跑　asio::io_service::run() 即可。这样是进行多线程还是单线程都可以由用户灵活的控制。
+
+虽然　jack 和　microcai 意识到了一个基于　asio 的并发　HTTP 下载库的重要性。但是真正导致他们动手的原因却是一个女人　——　猫是也。
+
+猫据说希望开发一个某客户端，需要用到多线程HTTP下载功能，于是向社区列位大牛求救。　microcai 告诉她，jack在一份私有项目里实现过一个多线程　HTTP 下载代码，找他要一下， jack 说不定能剥离出来给猫用。
+
+jack　说剥离太麻烦了，反正一直有个想用　asio 重写一个　HTTP 并发下载库的想法，不如重复发明一下轮子，用　asio 的方式彻底重写一个满意的HTTP库。
+
+恰逢　avbot 的　WebQQ 协议需要　HTTP 库，但是基于 asio 的　HTTP库目前只有urdl (也是asio作者的大作，可惜已经不维护了)可以用，于是勉强用了这个早就停止开发的urdl，而且修修补补才勉强凑合使用。
+
+重写一个真正合用的基于asio的异步HTTP库确实能帮助avbot项目，于是microcai也赞成jack的决定。了解microcai脾气的人都知道，microcai是一个坚定的反轮子党——一切重复发明轮子的行为都要被他批判。
+
+# 使用 
+## 获取 avhttp 
+
+avhttp 使用 git 进行版本控制, 项目托管在 [github](http:/github.com/avplayer/avhttp)
+
+使用 git 即可获取源码
+
+```shell
+git clone git://github.com/avplayer/avhttp.git
+```
+
+## 编译 avhttp
+
+avhttp 是个 header only 的库, 使用时无需编译, 只要包含 avhttp.hpp 头文件即可. 但是 avhttp 依赖于 boost 库, 因此你需要 [[编译boost]]
+
+
+## 快速上手
+```cpp
+ #include <iostream>
+ #include <boost/array.hpp>
+ #include "avhttp.hpp"
+ int main()
+ {
+    boost::asio::io_service io;
+    avhttp::http_stream h(io);
+    boost::system::error_code ec;
+    // 打开url.
+    h.open("http://www.boost.org/LICENSE_1_0.txt", ec);
+    if (ec) { // 打开失败处理...
+        std::cout << "Error: " << ec.message() << std::endl;
+        return -1;
+    }
+    boost::array<char, 1024> buf;
+    // 循环读取数据.
+    while (!ec) {
+        std::size_t bytes_transferred = h.read_some(boost::asio::buffer(buf), ec);
+        // 将下载的数据打印到屏幕.
+        std::cout.write(buf.data(), bytes_transferred);
+    }
+    std::cout.flush();
+    h.close(ec); // 关闭.
+    io.run();
+    return 0;
+ }
+
+```
+OK, 上面已经展示了一个简单却功能完善的示例用于同步方式HTTP下载. 如果你还不够了解avhttp, 那么你一定很奇怪, 我为什么没有介绍如何编译avhttp, yeah, avhttp是header only的工具库, 无需编译, include即可享用.
+
+下面我来介绍异步并发下载多个URL的示范.
+
+## 异步并发下载多个URL
+```cpp
+ #include <iostream>
+ #include <boost/array.hpp>
+ #include <boost/shared_ptr.hpp>
+ #include <boost/enable_shared_from_this.hpp>
+ #include "avhttp.hpp"
+ class downloader : public boost::enable_shared_from_this<downloader>
+ {
+ public:
+    downloader(boost::asio::io_service &io)
+        : m_io_service(io)
+        , m_stream(io)
+    {}
+    ~downloader()
+    {}
+ public:
+    void start(const std::string &url)
+    {
+        // 异步打开链接, 完成操作时将调用handle_open.
+        m_stream.async_open(url,
+            boost::bind(&downloader::handle_open, shared_from_this(),  boost::asio::placeholders::error));
+    }
+    void handle_open(const boost::system::error_code &ec)
+    {
+        if (!ec)
+        {
+            // 异步发起从http读取数据操作.
+            m_stream.async_read_some(boost::asio::buffer(m_buffer, 1024),
+                boost::bind(&downloader::handle_read, shared_from_this(),
+                    boost::asio::placeholders::bytes_transferred,
+                    boost::asio::placeholders::error
+                )
+            );
+        }
+    }
+    void handle_read(int bytes_transferred, const boost::system::error_code &ec)
+    {
+        if (!ec)
+        {
+            // 输出到屏幕.
+            std::cout.write(m_buffer.data(), bytes_transferred);
+            // 继续读取http数据.
+            m_stream.async_read_some(boost::asio::buffer(m_buffer),
+                boost::bind(&downloader::handle_read, shared_from_this(),
+                    boost::asio::placeholders::bytes_transferred,
+                    boost::asio::placeholders::error
+                )
+            );
+        }
+        else if (ec == boost::asio::error::eof)
+        {
+            std::cout.write(m_buffer.data(), bytes_transferred);
+        }
+        std::cout.flush();
+    }
+ private:
+    boost::asio::io_service &m_io_service;
+    avhttp::http_stream m_stream;
+    boost::array<char, 1024> m_buffer;
+ };
+ int main(int argc, char* argv[])
+ {
+    if (argc < 2)
+    {
+        std::cerr << "usage: " << argv[0] << " <url1> [url2] ...\n";
+        return -1;
+    }
+    try
+    {
+        boost::asio::io_service io;
+        // 循环遍历url, 并创建下载.
+        for (int i = 1; i < argc; i++)
+        {
+            std::string url = argv[i];
+            if (url.empty())
+                break;
+            boost::shared_ptr<downloader> d(new downloader(io));
+            d->start(url);
+        }
+        io.run();
+    }
+    catch (std::exception &e)
+    {
+        std::cerr << "Exception: " << e.what() << std::endl;
+        return -1;
+    }
+    return 0;
+ }
+```
+到现在为止, 您已经了解了AVHTTP的同步和异步的基本用法, 但事实上有时您还需要定制自己的HTTP请求, 请继续往下看, 下面介绍HTTP参数相关的设置.
+
+## 使用request_opts定制HTTP请求
+
+```cpp
+ boost::asio::io_service io;
+ avhttp::http_stream h(io);
+ avhttp::request_opts opt;
+ // 可以insert多个选项.
+ opt.insert("Connection", "Keep-Alive");
+ // 在这里设置到request_options.
+ h.request_options(opt);
+ // 然后再发起其它相关操作.
+ h.open("http://www.boost.org/LICENSE_1_0.txt");
+ // ...
+```
+
+avhttp::request_opts 在发起HTTP请求之前的设定HTTP选项, 它可以实现让您定制自己的http header.
+
+## 使用proxy_settings设置代理
+
+```cpp
+ boost::asio::io_service io;
+ avhttp::http_stream h(io);
+ avhttp::proxy_settings p;
+ // 这里可以设置3种代理, socks4/socks5/http, 具体可以查看avhttp::proxy_settings的 声明.
+ p.type = avhttp::proxy_settings::http;
+ p.hostname = "127.0.0.1";
+ p.port = 8080;
+ h.proxy(p); // 设置代理.
+ // 然后再发起其它相关操作.
+ h.open("http://www.boost.org/LICENSE_1_0.txt");
+ // ...
+```
+想了解更多的关于avhttp的使用(断点续传并发下载等), 请参考avhttp的example代码.
+
+# 常用问题
+* 如果需要支持https, 它依赖openssl, 请自行编译openssl或到 [http://sourceforge.net/projects/avplayer/files/develop/OpenSSL-dev/ 下载已经编译好的ssl开发包, 并在项目中设置, 启用AVHTTP_ENABLE_OPENSSL.
+* 如果需要支持gzip, 它依赖zlib, 需要在项目中启用AVHTTP_ENABLE_ZLIB, 当然您还需要使用avhttp::request_opts指定相应Accept-Encoding.
+* 如果您只有一个线程运行io_service, 那么定义AVHTTP_DISABLE_THREAD可以避免锁来提高工作效率.
+* 如果您还有其它任何问题, 请加QQ群:3597082或IRC #avplayer @ irc.freenode.net, 或直接mailto: jack.wgm@gmail.com.
