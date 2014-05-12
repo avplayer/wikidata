@@ -14,17 +14,20 @@
 avbot 的 XMPP 协议需要 openssl 支持, 所以也需要安装 openssl . 推荐 Ubuntu Server 64位操作系统来编译。
 
 RPM系的可以使用 
- yum install openssl-devel
+
+> yum install openssl-devel
 
 deb 系的则是 
- apt-get install libssl-dev
+
+> apt-get install libssl-dev
 
 完全纯净的Ubuntu系统你可能还需要 gcc g++ cmake make
-  apt-get install gcc g++ cmake make
+
+> apt-get install gcc g++ cmake make
 
 Arch
 
- pacman -S openssl
+> pacman -S openssl
 
 ## gcc >=4.6.x
 
@@ -34,29 +37,38 @@ Arch
 * http://www.cnblogs.com/higkoo/p/howto_update_gcc.html 《如何在CentOS上使用高版本的GCC编译》
 
 Ubuntu 12.04 可以使用下面的命令进行 gcc 升级到 4.8
+
+```
   sudo add-apt-repository ppa:ubuntu-toolchain-r/test
   sudo apt-get update
   sudo apt-get install gcc-4.8
   sudo apt-get install g++-4.8
   sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
   sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
+```
 
 # 获取代码
 
 avbot 提供了打包好的源码包, 但是因为 avbot 开发速度实在太快, 下载好的源码包很快就会过时. 所以推荐使用git下载开发版的源码.
 
 ## 克隆代码
-  使用git 获取代码, 你可能还需要 git 工具
-    apt-get install git
+使用git 获取代码, 你可能还需要 git 工具
+
+> apt-get install git
 
 推荐的办法是使用 git 获取 avbot 源码
- git clone git://github.com/avplayer/avbot.git
- cd avbot
+
+```
+  git clone git://github.com/avplayer/avbot.git
+  cd avbot
+```
 
 如果要更新 avbot 使用下面的命令
 
- cd avbot
- git pull -f
+```
+  cd avbot
+  git pull -f
+```
 
 ## 使用源码包
 
@@ -65,15 +77,19 @@ avbot 在  sourceforge 上提供了打包好的源码压缩包. 打包好的源�
 # 编译
 
 avbot 使用 [http://cmake.org cmake] 作为编译系统。
-  apt-get install make cmake
+
+> apt-get install make cmake
 
 ## 使用 cmake 编译
 
 项目使用 cmake 编译。编译办法很简单
- mkdir build
- cd build
- cmake [-DCMAKE_BUILD_TYPE=Release] [avbot源码的路径] 
- make -j8
+
+```
+  mkdir build
+  cd build
+  cmake [-DCMAKE_BUILD_TYPE=Release] [avbot源码的路径] 
+  make -j8
+```
 
 编译时,推荐内存3G以上, 如果内存不够,内存交换也要够,速度要慢些, 如果报内存不足错误的话,可以尝试重新编译,还是存在编译通过的可能.
 
