@@ -1,6 +1,6 @@
 这里帮助大家在Linux平台编译 avbot.
 
-对于 Windows 平台, 因为复杂度有点高, 需要额外参考 [[windows下编译avbot]]
+对于 Windows 平台, 因为复杂度有点高, 需要额外参考 [windows下编译avbot]()
 
 # 检查编译依赖
 
@@ -9,7 +9,7 @@
 从 avbot 6.3 版本开始 avbot 需要 boost >=1.55
 如果你懒得安装该版本以上的 boost, 请使用 6.2 版本的 avbot .
 
-如果你的系统没有 boost 或者版本太老或在找遍ppa也没找到合适的, 你就需要自行[[编译boost]]了
+如果你的系统没有 boost 或者版本太老或在找遍ppa也没找到合适的, 你就需要自行 [编译boost]() 了
 
 avbot 的 XMPP 协议需要 openssl 支持, 所以也需要安装 openssl . 推荐 Ubuntu Server 64位操作系统来编译。
 
@@ -76,7 +76,7 @@ avbot 在  sourceforge 上提供了打包好的源码压缩包. 打包好的源�
 
 # 编译
 
-avbot 使用 [http://cmake.org cmake] 作为编译系统。
+avbot 使用 [http://cmake.org cmake](http://cmake.org/) 作为编译系统。
 
 > apt-get install make cmake
 
@@ -93,4 +93,4 @@ avbot 使用 [http://cmake.org cmake] 作为编译系统。
 
 编译时,推荐内存3G以上, 如果内存不够,内存交换也要够,速度要慢些, 如果报内存不足错误的话,可以尝试重新编译,还是存在编译通过的可能.
 
-但是在 windows 上编译， 事情就没那么简单了， 请参考 [[windows下编译avbot]]
+但是在 windows 上编译， 事情就没那么简单了， 请参考 [windows下编译avbot]()
