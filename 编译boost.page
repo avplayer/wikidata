@@ -1,4 +1,3 @@
-
 [boost](http://www.boost.org/) 提供经同僚审查的免费便携c++源码库。
 
 # [下载 boost](http://www.boost.org/users/download/)
@@ -27,8 +26,10 @@ boost源码可以从[http://sourceforge.net/projects/boost/files/boost/ SourceFo
   ./b2
   sudo ./bjam -j8 variant=release link=static threading=multi install --prefix=/usr \
      --with-system --with-thread --with-locale --with-log --with-filesystem \
-     --with-program_options --with-regex --with-date_time --with-timer --with-chrono
+     --with-program_options --with-regex --with-date_time --with-timer --with-chrono --with-python
 ```
+
+  --with-python 是为了让 avbot 支持 python, 你可能需要安装 python-dev 
 
 让洁癖去死, 装到 /usr 而不是 /usr/local 是问题最少的方式.
 
