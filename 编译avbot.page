@@ -87,7 +87,7 @@ avbot 使用 [http://cmake.org cmake](http://cmake.org/) 作为编译系统。
 ```
   mkdir build
   cd build
-  cmake [-DCMAKE_BUILD_TYPE=Release] [avbot源码的路径] 
+  cmake [-DCMAKE_BUILD_TYPE=Release] [-DENABLE_PYTHON=ON] [avbot源码的路径] 
   make -j8
 ```
 
