@@ -1,52 +1,61 @@
+[boost](http://www.boost.org/) 提供经同僚审查的免费便携c++源码库。
 
-[http://www.boost.org/ boost] 提供经同僚审查的免费便携c++源码库。
-
-= [http://www.boost.org/users/download/ 下载 boost] =
+# [下载 boost](http://www.boost.org/users/download/)
 
 boost源码可以从[http://sourceforge.net/projects/boost/files/boost/ SourceForge]获取
 
-  wget http://downloads.sourceforge.net/project/boost/boost/1.55.0/boost_1_55_0.tar.gz
+> wget http://downloads.sourceforge.net/project/boost/boost/1.55.0/boost_1_55_0.tar.gz
 
-= [http://www.boost.org/doc/libs/1_54_0/doc/html/bbv2/installation.html 编译安装 boost] =
+# [编译安装 boost](http://www.boost.org/doc/libs/1_54_0/doc/html/bbv2/installation.html)
 
-
-== linux 下编译 ==
+## linux 下编译
 
 事先声明,  boost 在 linux 平台无需安装独立的 libiconv 库, glibc 已经集成了 libiconv . 独立安装的 libiconv 只能说你自找苦吃.
 
 1.先下载boost库最新版源码，比如boost-1_55_0.tar.bz2
 
 2.解压
- tar xf boost-1_55_0.tar.bz2
+
+> tar xf boost-1_55_0.tar.bz2
 
 3.进入解压目录编译
- cd boost-1_55_0
- ./bootstrap.sh
- ./b2
- sudo ./bjam -j8 variant=release link=static runtime-link=shared threading=multi install --layout=system --prefix=/usr  \
-     --with-system --with-thread --with-locale --with-atomic --with-coroutine --with-context --with-filesystem \
-     --with-program_options --with-regex --with-date_time --with-timer --with-chrono
 
-让洁癖去死, 装到 /usr 而不是 /usr/local 是问题最少的方式. 64位的系统请加上　--libdir=/usr/lib64　不然会装到　/usr/lib 里．．在　debian 这种　/usr/lib 其实是　32位的发行版下就麻烦了．
+```
+  cd boost-1_55_0
+  ./bootstrap.sh
+  ./b2
+  sudo ./bjam -j8 variant=release link=static threading=multi install --prefix=/usr \
+     --with-system --with-thread --with-locale --with-log --with-filesystem \
+     --with-program_options --with-regex --with-date_time --with-timer --with-chrono --with-python
+```
 
-== windows 下编译==
+  --with-python 是为了让 avbot 支持 python, 你可能需要安装 python-dev 
+
+让洁癖去死, 装到 /usr 而不是 /usr/local 是问题最少的方式.
+
+## windows 下编译
 
 先执行 bootstrap.bat 生成 bjam.exe
 
-bootstrap.bat 似乎并不支持 gcc , 所以如果没有安装 VC 可以到官网下一个 bjam.exe 放到 boost 文件夹里. bjam 必须和 boost 的版本匹配, 我这里提供一个 boost.1.54 编译好的 bjam , 需要的人到这里下载 [http://wiki.avplayer.org/bjam-for-boost-1.54.zip bjam-for-boost-1.54.zip]
+bootstrap.bat 似乎并不支持 gcc , 所以如果没有安装 VC 可以到官网下一个 bjam.exe 放到 boost 文件夹里. bjam 必须和 boost 的版本匹配, 我这里提供一个 boost.1.54 编译好的 bjam , 需要的人到这里下载 [bjam-for-boost-1.54.zip](http://wiki.avplayer.org/bjam-for-boost-1.54.zip)
 
 然后是
- ./bjam.exe boost.locale.iconv=on --toolset=gcc --layout=system link=static --buildtype=complete install \
- --with-system --with-thread --with-locale --with-coroutine --with-filesystem \
+
+```
+ ./bjam.exe boost.locale.iconv=on --toolset=gcc  link=static --buildtype=complete install \
+ --with-system --with-thread --with-locale --with-log --with-filesystem \
  --with-program_options --with-regex --with-date_time --with-timer --with-chrono
+```
 
 如果编译器不是使用的gcc，而是VS的话，打开VS20XX x86 Native Tools Command Prompt终端，然后cd到boost代码目录，
-b2.exe boost.locale.iconv=on --toolset=msvc-11  link=static --buildtype=complete install --with-system --with-thread --with-locale --with-log --with-filesystem --with-program_options --with-regex --with-date_time --with-timer --with-chrono
 
+```
+b2.exe boost.locale.iconv=on --toolset=msvc-11  link=static --buildtype=complete install --with-system --with-thread --with-locale --with-log --with-filesystem --with-program_options --with-regex --with-date_time --with-timer --with-chrono
+```
 
 toolset：表示编译器工具，我安装的是VS2013，所以是msvc-11(如果你是VS2005，可以使用msvc-8.0 VS2008是msvc-9.0,VS2010是mscv-10)
 
-== Reset Cmake variables for finding Boost path  ==
+## Reset Cmake variables for finding Boost path
 If unluckly Boost library is installed in /usr/locale, and there are errors for Cmake, You can run `YOU_PROJECT/cmake -i` and chose advanced options for reset your variables of Boost, such as `Boost_INCLUDE_DIR`, etc.
 
 
