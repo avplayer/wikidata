@@ -24,8 +24,8 @@ boost源码可以从[http://sourceforge.net/projects/boost/files/boost/ SourceFo
   cd boost-1_55_0
   ./bootstrap.sh
   ./b2
-  sudo ./bjam -j8 variant=release link=static threading=multi install --prefix=/usr \
-     --with-system --with-thread --with-locale --with-log --with-filesystem \
+ sudo ./bjam -j8 variant=release link=static runtime-link=shared threading=multi install --layout=system --prefix=/usr  \
+     --with-system --with-thread --with-locale --with-atomic --with-coroutine --with-context --with-filesystem \
      --with-program_options --with-regex --with-date_time --with-timer --with-chrono --with-python
 ```
 
