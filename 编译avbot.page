@@ -76,9 +76,15 @@ avbot 在  sourceforge 上提供了打包好的源码压缩包. 打包好的源�
 
 # 编译
 
+cmake >= 2.8.11
 avbot 使用 [http://cmake.org cmake](http://cmake.org/) 作为编译系统。
+Ubuntu 可以使用 ppa:kalakris/cmake
 
-> apt-get install make cmake
+```
+  sudo add-apt-repository -y ppa:kalakris/cmake
+  sudo apt-get update
+  sudo apt-get install cmake
+```
 
 ## 使用 cmake 编译
 
