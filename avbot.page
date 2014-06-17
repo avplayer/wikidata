@@ -110,7 +110,7 @@ avbot 提供了投票机制, 详情请参考 [avbot_vote]()
 
 # 扩展 avbot
 
-avbot 提供了3种机制用于扩展.
+avbot 提供了多种机制用于扩展.
 
 ##  C++ extension
 第一种机制最灵活, 当然难度也最大, 就是编写 extensions , 参考 extension 目录下的几个扩展, 自己写一个, 然后在 extension.cpp 添加调用即可. 因为难度太高, 所以不建议大家使用这个机制.
@@ -123,6 +123,10 @@ c++ extension 需要考虑到avbot是以异步的形式调用的extension, 因�
 avbot 提供的第二种机制是 LUA 绑定. 不过 avbot 预编译的二进制没有启用 lua 绑定. 需要自己启用. 也不建议大家使用这个机制.
 
 [启用lua绑定](avbot_enable_lua)
+
+## python script
+启用 python script 后, 需要 指定环境变量 PYTHONPATH
+  export PYTHONPATH=/opt/avbot/
 
 ## RPC
 
